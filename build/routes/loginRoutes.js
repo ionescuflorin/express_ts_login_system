@@ -31,3 +31,8 @@ router.get('/', function (req, res) {
         res.send("\n            <div>\n                <div>You are not logged in</div>\n                <a href=\"/login\">Login</div>\n            </div>\n        ");
     }
 });
+router.get('/logout', function (req, res) {
+    // logout
+    req.session = null;
+    res.redirect('/');
+});

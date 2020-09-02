@@ -59,4 +59,10 @@ router.get('/', (req: Request, res: Response) => {
     }
 })
 
+router.get('/logout', (req: Request, res: Response) => {
+    // logout
+    req.session = null;
+    res.redirect('/')
+})
+
 export { router };
