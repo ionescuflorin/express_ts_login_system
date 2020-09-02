@@ -1,8 +1,20 @@
-import { Router, Request, Response } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 
 // for dealing with poor type definition files
 interface RequestWithBody extends Request {
   body: { [key: string]: string | undefined };
+}
+
+// middleware for protected routes
+function requireAuth(req: Request, res: Response, next: NextFunction): void {
+  // has session and is loggedin
+  if (req.session && req.session.loggedIn) {
+    next();
+    return;
+  }
+
+  res.status(403);
+  res.send('Not Permitted')
 }
 
 const router = Router();
@@ -40,29 +52,33 @@ router.post('/login', (req: RequestWithBody, res: Response) => {
 });
 
 router.get('/', (req: Request, res: Response) => {
-    // req.session - checking login status
-    // req.session && - type guard
-    if(req.session && req.session.loggedIn) {
-        res.send(`
+  // req.session - checking login status
+  // req.session && - type guard
+  if (req.session && req.session.loggedIn) {
+    res.send(`
             <div>
                 <div>You are logged in</div>
                 <a href="/logout">Logout</div>
             </div>
-        `)
-    } else {
-        res.send(`
+        `);
+  } else {
+    res.send(`
             <div>
                 <div>You are not logged in</div>
                 <a href="/login">Login</div>
             </div>
-        `)
-    }
-})
+        `);
+  }
+});
 
 router.get('/logout', (req: Request, res: Response) => {
-    // logout
-    req.session = null;
-    res.redirect('/')
+  // logout
+  req.session = null;
+  res.redirect('/');
+});
+
+router.get('/protected', requireAuth, (req: Request, res: Response) => {
+    res.send('Welcome to protected route, logged in user')
 })
 
 export { router };
