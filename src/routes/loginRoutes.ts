@@ -28,10 +28,14 @@ router.post('/login', (req: RequestWithBody, res: Response) => {
   // now ew'll have access to 'req.body' which will contain the form content
   const { email, password } = req.body;
 
-  if (email) {
-    res.send(email.toUpperCase());
+  if (email && password && email === 'hi@hi.com' && password === 'password') {
+    // mark this person as logged in
+    req.session = { loggedIn: true };
+
+    // redirect them to the root route
+    res.redirect('/');
   } else {
-    res.send('You must provide an email');
+    res.send('Invalid email or password');
   }
 });
 
