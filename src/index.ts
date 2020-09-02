@@ -1,3 +1,4 @@
+// THIS IS THE MINIMUM TS VERSION
 import express, { Request, Response } from 'express';
 import { router } from './routes/loginRoutes';
 import bodyParser from 'body-parser';
